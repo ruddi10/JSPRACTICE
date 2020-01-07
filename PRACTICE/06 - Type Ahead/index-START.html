@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State">
+    <ul class="suggestions">
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+<script>
+  const s=document.querySelector(".suggestions");
+  function doit(word,lists){
+    return lists.filter(place=>{
+      const regex= new RegExp(word,'gi');
+      return place.city.match(regex)|| place.state.match(regex);
+    })
+  }
+  function displayn(){
+   let a= doit(this.value,lists);
+   
+
+   const b=a.map(element => {
+    const reg= new RegExp(this.value,'gi');
+    const cit= element.city.replace(reg,'<span class="h1">'+this.value+'</span>');
+    const state= element.state.replace(reg,'<span class="h1">'+this.value+'</span>');
+      return "<li><span>"+cit+" ,"+state+"</span> <span> "+element.population+"</span></li>";}).join("");
+   s.innerHTML=b;
+
+
+     
+   };
+  
+
+  let lists= [] ;
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+fetch(endpoint).then(dat=>dat.json()).then(data=>lists=data);
+document.querySelector(".search").addEventListener("change",displayn);
+document.querySelector(".search").addEventListener("keyup",displayn);
+
+</script>
+</body>
+</html>
